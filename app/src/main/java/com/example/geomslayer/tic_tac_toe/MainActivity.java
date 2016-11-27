@@ -14,14 +14,15 @@ public class MainActivity extends AppCompatActivity {
 
     final String LOG_TAG = this.getClass().getSimpleName();
     final int SIZE = 3;
-    final int PLAYER_ONE = 0;
-    final int PLAYER_TWO = 1;
+    final int CROSSES = 0;
+    final int ZEROES = 1;
     final int EMPTY = -1;
 
     int activePlayer;
     int[][] field = new int[SIZE][SIZE];
     LinearLayout retryLayout;
     GridLayout itemFieldLayout;
+    ImageView activePlayerImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +31,12 @@ public class MainActivity extends AppCompatActivity {
 
         retryLayout = (LinearLayout) findViewById(R.id.retry_layout);
         itemFieldLayout = (GridLayout) findViewById(R.id.item_field_layout);
+        activePlayerImg = (ImageView) findViewById(R.id.active_player_img);
         prepareField();
     }
 
     private void prepareField() {
-        activePlayer = PLAYER_ONE;
+        activePlayer = CROSSES;
         retryLayout.setVisibility(View.INVISIBLE);
 
         for (int i = 0; i < SIZE; ++i) {
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
             ((ImageView) itemFieldLayout.getChildAt(i)).setImageResource(0);
         }
         setEnabledAll(itemFieldLayout, true);
+        setActivePlayer();
     }
 
     public void dropItem(View view) {
@@ -68,12 +71,24 @@ public class MainActivity extends AppCompatActivity {
             ((TextView) findViewById(result_txt)).setText(msg);
             setEnabledAll(itemFieldLayout, false);
         }
+        else {
+            activePlayer ^= 1;
+            setActivePlayer();
+        }
 
-        activePlayer ^= 1;
     }
 
     public void playAgain(View view) {
         prepareField();
+    }
+
+    private void setActivePlayer() {
+        if (activePlayer == CROSSES) {
+            activePlayerImg.setImageResource(R.drawable.cross);
+        }
+        else {
+            activePlayerImg.setImageResource(R.drawable.zero);
+        }
     }
 
     private void setEnabledAll(GridLayout layout, boolean mode) {
@@ -84,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showItem(ImageView image) {
-        if (activePlayer == PLAYER_ONE) {
+        if (activePlayer == CROSSES) {
             image.setImageResource(R.drawable.cross);
         } else {
             image.setImageResource(R.drawable.zero);
@@ -136,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         }
         res |= diag;
         if (res) {
-            return getString(R.string.winner) + " " + (activePlayer + 1);
+            return (activePlayer == CROSSES ? "Crosses " : "Zeroes ") + getString(R.string.winner);
         }
         if (draw()) {
             return getString(R.string.draw);

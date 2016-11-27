@@ -4,4 +4,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="cell_size">100dp</dimen>
     <dimen name="cell_margin">5dp</dimen>
+    <dimen name="text_size">24sp</dimen>
+    <dimen name="active_player_image_size">24dp</dimen>
 </resources>
